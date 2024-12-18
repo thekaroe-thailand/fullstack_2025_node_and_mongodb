@@ -14,9 +14,26 @@ datasource db {
 }
 
 model Customer {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
   name   String
   email  String
   phone  String
-  credit Int?
+  credit Int? // allow null
+  Order  Order[]
+}
+
+model Order {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId String   @db.ObjectId
+  customer   Customer @relation(fields: [customerId], references: [id])
+  amount     Int
+  Product    Product? @relation(fields: [productId], references: [id])
+  productId  String?  @db.ObjectId
+}
+
+model Product {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  price Int
+  Order Order[]
 }
